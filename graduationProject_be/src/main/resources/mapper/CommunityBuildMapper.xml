@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.neusoft.mapper.CommunityBuildMapper">
+
+
+    <select id="selectAllBuildData" resultType="com.neusoft.entity.dto.CommunityBuildDTO">
+        SELECT
+            a.*,
+            b.CODE_NAME,
+            c.AREA_NAME,
+            d.BUILD_FLOOR_NAME
+        FROM
+            `my_community_build` a
+        JOIN `my_code` b
+        JOIN `my_community_area` c
+        JOIN `my_build_floor` d
+        WHERE
+            a.BUILD_RISK = b.MCODE
+        AND a.AREA_CODE = c.AREA_CODE
+        AND a.BUILD_FLOOR_CODE = d.BUILD_FLOOR_CODE
+            <if test="po.Id != null">
+                AND a.ID LIKE '%${po.Id}%'
+            </if>
+            <if test="po.buildCode != null">
+                AND a.BUILD_CODE LIKE '%${po.buildCode}%'
+            </if>
+            <if test="po.areaCode != null">
+                AND a.AREA_CODE LIKE '%${po.areaCode}%'
+            </if>
+            <if test="po.buildName != null">
+                AND a.BUILD_NAME LIKE '%${po.buildName}%'
+            </if>
+            <if test="po.buildRisk != null">
+                AND a.BUILD_RISK LIKE '%${po.buildRisk}%'
+            </if>
+            <if test="po.communityCode != null">
+                AND a.COMMUNITY_CODE LIKE '%${po.communityCode}%'
+            </if>
+        ORDER BY a.ID ASC
+    </select>
+
+    <select id="selectAllBuildDataForLM" resultType="com.neusoft.entity.dto.CommunityBuildDTO">
+        SELECT
+            a.*,
+            b.CODE_NAME,
+            c.AREA_NAME,
+            d.BUILD_FLOOR_NAME
+        FROM
+            `my_community_build` a
+            JOIN `my_code` b
+            JOIN `my_community_area` c
+            JOIN `my_build_floor` d
+        WHERE
+            a.BUILD_RISK = b.MCODE
+            AND a.AREA_CODE = c.AREA_CODE
+            AND a.BUILD_FLOOR_CODE = d.BUILD_FLOOR_CODE
+            AND a.AREA_CODE = '${mangeInf.areaCode}'
+        <if test="po.Id != null">
+            AND a.ID LIKE '%${po.Id}%'
+        </if>
+        <if test="po.buildCode != null">
+            AND a.BUILD_CODE LIKE '%${po.buildCode}%'
+        </if>
+        <if test="po.areaCode != null">
+            AND a.AREA_CODE LIKE '%${po.areaCode}%'
+        </if>
+        <if test="po.buildName != null">
+            AND a.BUILD_NAME LIKE '%${po.buildName}%'
+        </if>
+        <if test="po.buildRisk != null">
+            AND a.BUILD_RISK LIKE '%${po.buildRisk}%'
+        </if>
+        <if test="po.communityCode != null">
+            AND a.COMMUNITY_CODE = '${po.communityCode} '
+        </if>
+        ORDER BY a.ID ASC
+    </select>
+
+    <select id="selectAllBuildDataForLN" resultType="com.neusoft.entity.dto.CommunityBuildDTO">
+        SELECT
+            a.*,
+            b.CODE_NAME,
+            c.AREA_NAME,
+            d.BUILD_FLOOR_NAME
+        FROM
+            `my_community_build` a
+            JOIN `my_code` b
+            JOIN `my_community_area` c
+            JOIN `my_build_floor` d
+        WHERE
+            a.BUILD_RISK = b.MCODE
+            AND a.AREA_CODE = c.AREA_CODE
+            AND a.BUILD_FLOOR_CODE = d.BUILD_FLOOR_CODE
+            AND a.AREA_CODE = '${mangeInf.areaCode}'
+            AND a.BUILD_CODE IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            <if test="po.Id != null">
+                AND a.ID LIKE '%${po.Id}%'
+            </if>
+            <if test="po.buildCode != null">
+                AND a.BUILD_CODE LIKE '%${po.buildCode}%'
+            </if>
+            <if test="po.areaCode != null">
+                AND a.AREA_CODE LIKE '%${po.areaCode}%'
+            </if>
+            <if test="po.buildName != null">
+                AND a.BUILD_NAME LIKE '%${po.buildName}%'
+            </if>
+            <if test="po.buildRisk != null">
+                AND a.BUILD_RISK LIKE '%${po.buildRisk}%'
+            </if>
+            <if test="po.communityCode != null">
+                AND a.COMMUNITY_CODE = '${po.communityCode} '
+            </if>
+        ORDER BY a.ID ASC
+    </select>
+
+    <select id="selectMangerBuild" resultType="java.lang.String">
+        SELECT
+	        GROUP_CONCAT( b.BUILD_CODE ) BUILD_NAME_LIST
+        FROM
+	        `my_manage` a
+	        JOIN `my_community_build` b ON FIND_IN_SET( b.BUILD_CODE, a.BUILD_CODE )
+        WHERE
+	        a.MANAGE_NAME = #{manageName}
+    </select>
+
+</mapper>

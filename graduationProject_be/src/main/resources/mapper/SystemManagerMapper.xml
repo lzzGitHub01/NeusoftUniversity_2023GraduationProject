@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.neusoft.mapper.SystemManagerMapper">
+
+    <select id="userLogin" resultType="SystemManagerPO">
+        SELECT * FROM my_manage WHERE MANAGE_NAME = #{manageName} AND IS_ENABLE = 120001
+    </select>
+
+    <select id="selectUserLevel" resultType="java.lang.String">
+        SELECT MANAGE_LEVEL FROM my_manage WHERE MANAGE_NAME = #{manageName}
+    </select>
+
+    <select id="selectUserCommunity" resultType="java.lang.String">
+        SELECT
+            b.COMMUNITY_NAME
+        FROM
+            `my_manage` a
+            JOIN `my_community` b
+        WHERE
+            a.COMMUNITY_CODE = b.COMMUNITY_CODE
+            AND a.MANAGE_NAME = #{manageName}
+    </select>
+
+    <select id="selectUserArea" resultType="java.lang.String">
+        SELECT
+            b.AREA_NAME
+        FROM
+            `my_manage` a
+            JOIN `my_community_area` b
+        WHERE
+            a.AREA_CODE = b.AREA_CODE
+            AND a.MANAGE_NAME = #{manageName}
+    </select>
+
+    <select id="selectUserBuild" resultType="java.lang.String">
+        -- GROUP_CONCAT(a,b)函数，a是查询的字段，b是拼接方式，将多条字段拼接为一组数据
+        -- FIND_IN_SET(str,strlist)，该函数的作用是查询字段(strlist) 中是否包含(str)的结果
+        SELECT
+            GROUP_CONCAT(b.BUILD_NAME) BUILD_NAME_LIST
+        FROM
+            `my_manage` a
+            JOIN `my_community_build` b ON FIND_IN_SET(b.BUILD_CODE,a.BUILD_CODE)
+        WHERE a.MANAGE_NAME = #{manageName}
+    </select>
+
+    <select id="selectAllUser" resultType="com.neusoft.entity.po.SystemManagerPO">
+        SELECT
+            a.ID,
+            a.MANAGE_CODE,
+            a.MANAGE_NAME,
+            a.PHONE,
+            a.MANAGE_LEVEL,
+            a.IS_ENABLE,
+            (CASE
+                WHEN a.AREA_CODE IS NULL THEN 'X'
+                ELSE b.AREA_NAME
+            END) AREA_CODE,
+            -- a.BUILD_CODE
+            (CASE
+                WHEN a.BUILD_CODE IS NULL THEN 'X'
+                ELSE a.BUILD_CODE
+                -- ELSE GROUP_CONCAT(c.BUILD_NAME)
+            END) BUILD_CODE
+        FROM
+            `my_manage` a
+            -- JOIN `my_community_build` c ON FIND_IN_SET(c.BUILD_CODE,a.BUILD_CODE)
+            LEFT JOIN `my_community_area` b ON a.AREA_CODE = b.AREA_CODE
+        WHERE
+            a.COMMUNITY_CODE = '${po.communityCode}'
+            <if test="po.Id != null">
+                AND a.ID LIKE '%${po.Id}%'
+            </if>
+            <if test="po.manageCode != null">
+                AND a.MANAGE_CODE LIKE '%${po.manageCode}%'
+            </if>
+            <if test="po.manageName != null">
+                AND a.MANAGE_NAME LIKE '%${po.manageName}%'
+            </if>
+            <if test="po.manageLevel != null">
+                AND a.MANAGE_LEVEL LIKE '%${po.manageLevel}%'
+            </if>
+            <if test="po.isEnable != null">
+                AND a.IS_ENABLE LIKE '%${po.isEnable}%'
+            </if>
+    </select>
+
+</mapper>

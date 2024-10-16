@@ -1,0 +1,41 @@
+# 配置当前服务器
+server:
+  # 配置启动时的端口号
+  port: 8087
+  # 配置session销毁时间（24小时）
+  servlet:
+    session:
+      timeout: PT24H
+#spring.jackson.generator.write_numbers_as_strings = true
+spring:
+  # 配置数据源信息
+  datasource:
+    # 配置数据源类型
+    type: com.zaxxer.hikari.HikariDataSource
+    # 配置数据库连接信息
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/neusoft2023_graduationproject?serverTimezone=UTC&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 111111
+  jackson:
+    generator:
+      write_numbers_as_strings: true
+
+
+mybatis-plus:
+  # 1、MybatisPlus日志相关配置
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 2、MybatisPlus的全局配置
+  global-config:
+    db-config:
+      # 设置实体类对应表名的前缀
+      table-prefix:
+      # 设置统一的主键生成策略
+      id-type:
+  # 3、配置类型别名所对应的包（在mapper配置文件中resultType不需要写全路径）
+  type-aliases-package: com.neusoft.entity.po
+  # 4、扫描通用枚举的包
+  type-enums-package: com.neusoft.enums
+  # 5、配置mapper文件夹的路径
+  mapper-locations: classpath:mapper/*.xml

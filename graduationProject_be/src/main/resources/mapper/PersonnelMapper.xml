@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.neusoft.mapper.PersonnelMapper">
+
+
+    <select id="selectAllPersonnelData" resultType="com.neusoft.entity.dto.PersonnelDTO">
+        SELECT
+            a.*,
+            b.AREA_NAME,
+            c.BUILD_NAME
+        FROM
+            `my_personnel` a
+            JOIN `my_community_area` b
+            JOIN `my_community_build` c
+        WHERE
+            a.AREA_CODE = b.AREA_CODE
+            AND a.BUILD_CODE = c.BUILD_CODE
+            AND a.AREA_CODE = c.AREA_CODE
+        <if test="po.Id != null">
+            AND a.ID LIKE '%${po.Id}%'
+        </if>
+        <if test="po.personnelCode != null">
+            AND a.PERSONNEL_CODE LIKE '%${po.personnelCode}%'
+        </if>
+        <if test="po.personnelName != null">
+            AND a.PERSONNEL_NAME LIKE '%${po.personnelName}%'
+        </if>
+        <if test="po.personnelAge != null">
+            AND a.PERSONNEL_AGE LIKE '%${po.personnelAge}%'
+        </if>
+        <if test="po.areaCode != null">
+            AND a.AREA_CODE LIKE '%${po.areaCode}%'
+        </if>
+        <if test="po.buildCode != null">
+            AND a.BUILD_CODE LIKE '%${po.buildCode}%'
+        </if>
+        <if test="po.personnelState != null">
+            AND a.PERSONNEL_STATE LIKE '%${po.personnelState}%'
+        </if>
+        <if test="po.natResult != null">
+            AND a.NAT_RESULT LIKE '%${po.natResult}%'
+        </if>
+        <if test="po.isUd != null">
+            AND a.IS_UD LIKE '%${po.isUd}%'
+        </if>
+        <if test="po.inoculate != null">
+            AND a.INOCULATE LIKE '%${po.inoculate}%'
+        </if>
+        <if test="po.sevenDayTrip != null">
+            AND a.SEVEN_DAY_TRIP LIKE '%${po.sevenDayTrip}%'
+        </if>
+        <if test="po.isQuarantine != null">
+            AND a.IS_QUARANTINE LIKE '%${po.isQuarantine}%'
+        </if>
+        <if test="po.communityCode != null">
+            AND a.COMMUNITY_CODE LIKE '%${po.communityCode}%'
+        </if>
+        ORDER BY a.ID ASC
+    </select>
+
+    <select id="selectCountNumber" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode}
+    </select>
+
+    <select id="selectIsUdNumber" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND IS_UD = 120001
+    </select>
+
+    <select id="selectFeminineNumber" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND NAT_RESULT = 120031
+    </select>
+
+    <select id="selectMasculineNumber" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND NAT_RESULT = 120032
+    </select>
+
+    <select id="selectTenantNumber" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND PERSONNEL_STATE = 120011
+    </select>
+
+    <select id="selectHoldNumber" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND PERSONNEL_STATE = 120012
+    </select>
+
+    <select id="selectNoDoseNumber" resultType="java.lang.Integer">
+         SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND INOCULATE = '未接种'
+    </select>
+
+    <select id="selectOneDoseNumber" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND INOCULATE = '一针'
+    </select>
+
+    <select id="selectTwoDoseNumber" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND INOCULATE = '两针'
+    </select>
+
+    <select id="selectThreeDoseNumber" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND INOCULATE = '三针'
+    </select>
+
+    <select id="selectForeDoseNumber" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND INOCULATE = '四针'
+    </select>
+
+    <select id="selectAllPersonnelDataForLM" resultType="com.neusoft.entity.dto.PersonnelDTO">
+        SELECT
+            a.*,
+            b.AREA_NAME,
+            c.BUILD_NAME
+        FROM
+            `my_personnel` a
+            JOIN `my_community_area` b
+            JOIN `my_community_build` c
+        WHERE
+            a.AREA_CODE = b.AREA_CODE
+            AND a.BUILD_CODE = c.BUILD_CODE
+            AND a.AREA_CODE = c.AREA_CODE
+            AND a.AREA_CODE = '${mangeInf.areaCode}'
+        <if test="po.Id != null">
+            AND a.ID LIKE '%${po.Id}%'
+        </if>
+        <if test="po.personnelCode != null">
+            AND a.PERSONNEL_CODE LIKE '%${po.personnelCode}%'
+        </if>
+        <if test="po.personnelName != null">
+            AND a.PERSONNEL_NAME LIKE '%${po.personnelName}%'
+        </if>
+        <if test="po.personnelAge != null">
+            AND a.PERSONNEL_AGE LIKE '%${po.personnelAge}%'
+        </if>
+        <if test="po.areaCode != null">
+            AND a.AREA_CODE LIKE '%${po.areaCode}%'
+        </if>
+        <if test="po.buildCode != null">
+            AND a.BUILD_CODE LIKE '%${po.buildCode}%'
+        </if>
+        <if test="po.personnelState != null">
+            AND a.PERSONNEL_STATE LIKE '%${po.personnelState}%'
+        </if>
+        <if test="po.natResult != null">
+            AND a.NAT_RESULT LIKE '%${po.natResult}%'
+        </if>
+        <if test="po.isUd != null">
+            AND a.IS_UD LIKE '%${po.isUd}%'
+        </if>
+        <if test="po.inoculate != null">
+            AND a.INOCULATE LIKE '%${po.inoculate}%'
+        </if>
+        <if test="po.sevenDayTrip != null">
+            AND a.SEVEN_DAY_TRIP LIKE '%${po.sevenDayTrip}%'
+        </if>
+        <if test="po.isQuarantine != null">
+            AND a.IS_QUARANTINE LIKE '%${po.isQuarantine}%'
+        </if>
+        <if test="po.communityCode != null">
+            AND a.COMMUNITY_CODE = '${po.communityCode}'
+        </if>
+        ORDER BY a.ID ASC
+    </select>
+
+    <select id="selectAllPersonnelDataForLN" resultType="com.neusoft.entity.dto.PersonnelDTO">
+        SELECT
+            a.*,
+            b.AREA_NAME,
+            c.BUILD_NAME
+        FROM
+            `my_personnel` a
+            JOIN `my_community_area` b
+            JOIN `my_community_build` c
+        WHERE
+            a.AREA_CODE = b.AREA_CODE
+            AND a.BUILD_CODE = c.BUILD_CODE
+            AND a.AREA_CODE = c.AREA_CODE
+            AND a.AREA_CODE = '${mangeInf.areaCode}'
+            AND a.BUILD_CODE IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        <if test="po.Id != null">
+            AND a.ID LIKE '%${po.Id}%'
+        </if>
+        <if test="po.personnelCode != null">
+            AND a.PERSONNEL_CODE LIKE '%${po.personnelCode}%'
+        </if>
+        <if test="po.personnelName != null">
+            AND a.PERSONNEL_NAME LIKE '%${po.personnelName}%'
+        </if>
+        <if test="po.personnelAge != null">
+            AND a.PERSONNEL_AGE LIKE '%${po.personnelAge}%'
+        </if>
+        <if test="po.areaCode != null">
+            AND a.AREA_CODE LIKE '%${po.areaCode}%'
+        </if>
+        <if test="po.buildCode != null">
+            AND a.BUILD_CODE LIKE '%${po.buildCode}%'
+        </if>
+        <if test="po.personnelState != null">
+            AND a.PERSONNEL_STATE LIKE '%${po.personnelState}%'
+        </if>
+        <if test="po.natResult != null">
+            AND a.NAT_RESULT LIKE '%${po.natResult}%'
+        </if>
+        <if test="po.isUd != null">
+            AND a.IS_UD LIKE '%${po.isUd}%'
+        </if>
+        <if test="po.inoculate != null">
+            AND a.INOCULATE LIKE '%${po.inoculate}%'
+        </if>
+        <if test="po.sevenDayTrip != null">
+            AND a.SEVEN_DAY_TRIP LIKE '%${po.sevenDayTrip}%'
+        </if>
+        <if test="po.isQuarantine != null">
+            AND a.IS_QUARANTINE LIKE '%${po.isQuarantine}%'
+        </if>
+        <if test="po.communityCode != null">
+            AND a.COMMUNITY_CODE = '${po.communityCode}'
+        </if>
+        ORDER BY a.ID ASC
+    </select>
+
+    <select id="selectCountNumberForLM" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+    </select>
+
+    <select id="selectIsUdNumberForLM" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode} AND IS_UD = 120001
+    </select>
+
+    <select id="selectFeminineNumberForLM" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode} AND NAT_RESULT = 120031
+    </select>
+
+    <select id="selectMasculineNumberForLM" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode} AND NAT_RESULT = 120032
+    </select>
+
+    <select id="selectTenantNumberForLM" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode} AND PERSONNEL_STATE = 120011
+    </select>
+
+    <select id="selectHoldNumberForLM" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode} AND PERSONNEL_STATE = 120012
+    </select>
+
+    <select id="selectNoDoseNumberForLM" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode} AND INOCULATE = '未接种'
+    </select>
+
+    <select id="selectOneDoseNumberForLM" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode} AND INOCULATE = '一针'
+    </select>
+
+    <select id="selectTwoDoseNumberForLM" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode} AND INOCULATE = '两针'
+    </select>
+
+    <select id="selectThreeDoseNumberForLM" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode} AND INOCULATE = '三针'
+    </select>
+
+    <select id="selectForeDoseNumberForLM" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode} AND INOCULATE = '四针'
+    </select>
+
+    <select id="selectCountNumberForLN" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+        AND BUILD_CODE IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectIsUdNumberForLN" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+        AND BUILD_CODE IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND IS_UD = 120001
+    </select>
+
+    <select id="selectFeminineNumberForLN" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+        AND BUILD_CODE IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND NAT_RESULT = 120031
+    </select>
+
+    <select id="selectMasculineNumberForLN" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+        AND BUILD_CODE IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND NAT_RESULT = 120032
+    </select>
+
+    <select id="selectTenantNumberForLN" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+        AND BUILD_CODE IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND PERSONNEL_STATE = 120011
+    </select>
+
+    <select id="selectHoldNumberForLN" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+        AND BUILD_CODE IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND PERSONNEL_STATE = 120012
+    </select>
+
+    <select id="selectNoDoseNumberForLN" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+        AND BUILD_CODE IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND INOCULATE = '未接种'
+    </select>
+
+    <select id="selectOneDoseNumberForLN" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+        AND BUILD_CODE IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND INOCULATE = '一针'
+    </select>
+
+    <select id="selectTwoDoseNumberForLN" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+        AND BUILD_CODE IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND INOCULATE = '两针'
+    </select>
+
+    <select id="selectThreeDoseNumberForLN" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+        AND BUILD_CODE IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND INOCULATE = '三针'
+    </select>
+
+    <select id="selectForeDoseNumberForLN" resultType="java.lang.Integer">
+        SELECT count(*) FROM `my_personnel` WHERE COMMUNITY_CODE = #{sessionCommunityCode} AND AREA_CODE = #{sessionAreaCode}
+        AND BUILD_CODE IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND INOCULATE = '四针'
+    </select>
+
+</mapper>

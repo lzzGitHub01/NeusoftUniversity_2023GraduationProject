@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.neusoft.mapper.CommunityAreaMapper">
+
+    <select id="selectCurrentUserLevel" resultType="java.lang.String">
+        SELECT MANAGE_LEVEL FROM `my_manage` WHERE MANAGE_NAME = #{manageName}
+    </select>
+
+    <!--<select id="selectAllAreaData" resultType="com.neusoft.entity.dto.SelectAllAreaDTO">
+        SELECT a.*,b.CODE_NAME FROM `my_community_area` a join `my_code` b WHERE a.AREA_RISK = b.MCODE
+    </select>-->
+
+    <select id="selectAllAreaData" resultType="com.neusoft.entity.dto.SelectAllAreaDTO">
+        SELECT
+        a.*,b.CODE_NAME
+        FROM
+        `my_community_area` a join `my_code` b
+        WHERE a.AREA_RISK = b.MCODE
+        <if test="po.Id != null">
+            AND a.ID LIKE '%${po.Id}%'
+        </if>
+        <if test="po.areaCode != null">
+            AND AREA_CODE LIKE '%${po.areaCode}%'
+        </if>
+        <if test="po.areaName != null">
+            AND AREA_NAME LIKE '%${po.areaName}%'
+        </if>
+        <if test="po.areaRisk != null">
+            AND AREA_RISK LIKE '%${po.areaRisk}%'
+        </if>
+        <if test="po.communityCode != null">
+            AND COMMUNITY_CODE LIKE '%${po.communityCode}%'
+        </if>
+        ORDER BY a.ID ASC
+    </select>
+
+    <select id="selectAllAreaDataPage" resultType="com.neusoft.entity.dto.SelectAllAreaDTO">
+        SELECT a.*,b.CODE_NAME FROM `my_community_area` a join `my_code` b WHERE a.AREA_RISK = b.MCODE
+    </select>
+
+    <select id="selectAreaDataByCondition" resultType="com.neusoft.entity.dto.SelectAllAreaDTO">
+        SELECT
+        a.*,b.CODE_NAME
+        FROM
+        `my_community_area` a join `my_code` b
+        WHERE a.AREA_RISK = b.MCODE
+        <if test="po.Id != null">
+            AND a.ID LIKE '%${po.Id}%'
+        </if>
+        <if test="po.areaCode != null">
+            AND AREA_CODE LIKE '%${po.areaCode}%'
+        </if>
+        <if test="po.areaName != null">
+            AND AREA_NAME LIKE '%${po.areaName}%'
+        </if>
+        <if test="po.areaRisk != null">
+            AND AREA_RISK LIKE '%${po.areaRisk}%'
+        </if>
+    </select>
+
+    <select id="selectAreaAndPersonalCount" resultType="com.neusoft.entity.dto.infectionStatus.AreaInfectionSituationDTO">
+        SELECT DISTINCT
+            a.AREA_NAME,
+            a.AREA_CODE,
+            count( b.PERSONNEL_NAME ) AREA_TOTAL_NUMBER
+        FROM
+            `my_community_area` a
+            LEFT JOIN `my_personnel` b ON a.AREA_CODE = b.AREA_CODE
+        WHERE
+            a.COMMUNITY_CODE = #{sessionCommunityCode}
+            AND b.COMMUNITY_CODE = #{sessionCommunityCode}
+        GROUP BY
+            a.AREA_NAME
+    </select>
+
+    <select id="selectMasculineCount" resultType="java.lang.Integer">
+        SELECT DISTINCT
+            count( b.PERSONNEL_NAME ) MASCULINE_NUMBER
+        FROM
+            `my_community_area` a
+            LEFT JOIN `my_personnel` b ON a.AREA_CODE = b.AREA_CODE
+        WHERE
+            a.COMMUNITY_CODE = #{sessionCommunityCode}
+            AND b.COMMUNITY_CODE = #{sessionCommunityCode}
+            AND b.AREA_CODE = #{areaCode}
+            AND b.NAT_RESULT = 120032
+    </select>
+
+
+    <!--<trim prefix="where" suffix="and" suffixOverrides="and"></trim>-->
+    <!--<select id="selectAreaDataByCondition" resultType="com.neusoft.entity.dto.SelectAllAreaDTO">
+        SELECT
+            a.*,b.CODE_NAME
+        FROM
+            `my_community_area` a join `my_code` b
+        WHERE a.AREA_RISK = b.MCODE
+        <if test="Id != null">
+            AND a.ID LIKE '%${Id}%'
+        </if>
+        <if test="areaCode != null">
+            AND AREA_CODE LIKE '%${areaCode}%'
+        </if>
+        <if test="areaName != null">
+            AND AREA_NAME LIKE '%${areaName}%'
+        </if>
+        <if test="areaRisk != null">
+            AND AREA_RISK LIKE '%${areaRisk}%'
+        </if>
+
+    </select>-->
+
+</mapper>

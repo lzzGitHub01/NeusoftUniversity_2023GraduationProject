@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.neusoft.mapper.CommunityMapper">
+
+    <select id="selectAllCommunity" resultType="com.neusoft.entity.dto.CommunityDTO">
+        SELECT
+            *
+        FROM `my_community`
+        WHERE
+            1 = 1
+        <if test="po.Id != null">
+            AND ID LIKE '%${po.Id}%'
+        </if>
+        <if test="po.communityCode != null">
+            AND COMMUNITY_CODE LIKE '%${po.communityCode}%'
+        </if>
+        <if test="po.communityName != null">
+            AND COMMUNITY_NAME LIKE '%${po.communityName}%'
+        </if>
+    </select>
+
+</mapper>

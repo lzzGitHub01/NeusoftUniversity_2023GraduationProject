@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.neusoft.mapper.ExcelFileExportMapper">
+
+    <select id="selectExcelDataForLH" resultType="com.neusoft.entity.dto.excelExport.PersonalExcelDTO">
+        SELECT
+            a.ID,
+            a.PERSONNEL_CODE,
+            a.PERSONNEL_NAME,
+            a.PERSONNEL_AGE,
+            a.PHONE,
+            b.COMMUNITY_NAME,
+            c.AREA_NAME,
+            d.BUILD_NAME,
+            a.HOUSE_NUMBER,
+            a.PERSONNEL_STATE,
+            a.NAT_RESULT,
+            a.INOCULATE,
+            a.SEVEN_DAY_TRIP,
+            a.IS_UD,
+            a.IS_QUARANTINE,
+            a.QUARANTINE_POLICY
+        FROM
+            `my_personnel` a
+            LEFT JOIN `my_community` b ON a.COMMUNITY_CODE = b.COMMUNITY_CODE
+            LEFT JOIN `my_community_area` c ON a.AREA_CODE = c.AREA_CODE
+            LEFT JOIN `my_community_build` d ON a.BUILD_CODE = d.BUILD_CODE
+        WHERE
+            a.COMMUNITY_CODE = #{sessionCommunityCode}
+        GROUP BY(a.ID)
+    </select>
+
+    <select id="selectExcelDataForLM" resultType="com.neusoft.entity.dto.excelExport.PersonalExcelDTO">
+        SELECT
+            a.ID,
+            a.PERSONNEL_CODE,
+            a.PERSONNEL_NAME,
+            a.PERSONNEL_AGE,
+            a.PHONE,
+            b.COMMUNITY_NAME,
+            c.AREA_NAME,
+            d.BUILD_NAME,
+            a.HOUSE_NUMBER,
+            a.PERSONNEL_STATE,
+            a.NAT_RESULT,
+            a.INOCULATE,
+            a.SEVEN_DAY_TRIP,
+            a.IS_UD,
+            a.IS_QUARANTINE,
+            a.QUARANTINE_POLICY
+        FROM
+            `my_personnel` a
+            LEFT JOIN `my_community` b ON a.COMMUNITY_CODE = b.COMMUNITY_CODE
+            LEFT JOIN `my_community_area` c ON a.AREA_CODE = c.AREA_CODE
+            LEFT JOIN `my_community_build` d ON a.BUILD_CODE = d.BUILD_CODE
+        WHERE
+            a.COMMUNITY_CODE = #{dto.communityCode}
+            AND a.AREA_CODE = #{dto.areaCode}
+        GROUP BY(a.ID)
+    </select>
+
+    <select id="selectExcelDataForLN" resultType="com.neusoft.entity.dto.excelExport.PersonalExcelDTO">
+        SELECT
+            a.ID,
+            a.PERSONNEL_CODE,
+            a.PERSONNEL_NAME,
+            a.PERSONNEL_AGE,
+            a.PHONE,
+            b.COMMUNITY_NAME,
+            c.AREA_NAME,
+            d.BUILD_NAME,
+            a.HOUSE_NUMBER,
+            a.PERSONNEL_STATE,
+            a.NAT_RESULT,
+            a.INOCULATE,
+            a.SEVEN_DAY_TRIP,
+            a.IS_UD,
+            a.IS_QUARANTINE,
+            a.QUARANTINE_POLICY
+        FROM
+            `my_personnel` a
+            LEFT JOIN `my_community` b ON a.COMMUNITY_CODE = b.COMMUNITY_CODE
+            LEFT JOIN `my_community_area` c ON a.AREA_CODE = c.AREA_CODE
+            LEFT JOIN `my_community_build` d ON a.BUILD_CODE = d.BUILD_CODE
+        WHERE
+            a.COMMUNITY_CODE = #{dto.communityCode}
+            AND a.AREA_CODE = #{dto.areaCode}
+            AND a.BUILD_CODE IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        GROUP BY(a.ID)
+    </select>
+
+
+</mapper>
