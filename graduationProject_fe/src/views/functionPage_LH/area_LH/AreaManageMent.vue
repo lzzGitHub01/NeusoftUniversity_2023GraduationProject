@@ -4,7 +4,7 @@
         <el-form ref="resetFormRef" class="myFormStyle"  :model="selectDataValue">
             <el-row style="margin-bottom: 0px">
                 <el-col :span="8">
-                    <el-form-item label="区域ID" prop="id" label-width="80px" style="margin-bottom: 10px">
+                    <el-form-item :label="$t('area.area_id')" prop="id" label-width="80px" style="margin-bottom: 10px">
                         <el-input class="elInputStyle" v-model="selectDataValue.id" placeholder="请输入" clearable />
                     </el-form-item>
                 </el-col>

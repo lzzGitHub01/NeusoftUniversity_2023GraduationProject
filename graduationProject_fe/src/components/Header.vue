@@ -11,7 +11,7 @@
                     <el-tooltip class="box-item" effect="dark" content="退出当前账户" placement="bottom-end">
                         <div class="box01" text @click="centerDialogVisible = true">
                             <el-icon size="25px"><SwitchButton /></el-icon>
-                            <div style="margin-left:5px">退出</div>
+                            <div style="margin-left:5px">{{ $t('header.exit') }}</div>
                         </div>
                     </el-tooltip>
                     <el-dialog class="dialogStyle" v-model="centerDialogVisible" title="退出当前账户" width="26%" align-center>
@@ -39,6 +39,19 @@
                             <div style="margin-left:5px">当前社区：{{userData.communityName}}</div>
                         </div>
                     </el-tooltip>
+                    <el-tooltip class="box-item" effect="dark" content="语言切换" placement="bottom">
+                        <div class="box02">
+                            <div class="language-switch">
+                                <!-- <button @click="changeLanguage('zh-CN')" :class="{ active: locale === 'zh-CN' }">中文</button>
+                                <button @click="changeLanguage('en')" :class="{ active: locale === 'en' }">English</button> -->
+                                <!-- 也可以做成下拉菜单 -->
+                                <select v-model="selectedLang" @change="changeLanguage">
+                                    <option value="zh-CN">中文</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+                        </div>
+                    </el-tooltip>
                 </div>
             </el-col>
         </el-row>
@@ -48,18 +61,56 @@
 <script lang="ts">
 //引入element组件
 import { ElMessage } from 'element-plus'
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted} from 'vue'
 //引入路由
 import router from '../router/index.js'
 //引入element图标
 import {User,SwitchButton,ElementPlus,LocationInformation} from '@element-plus/icons-vue'
 //引入登出接口
 import {userExitAPI} from '../http/api/userAPI.js'
+// 引入i18n
+import { useI18n } from 'vue-i18n'
+
 
 
 export default {
 
     setup () {
+        // i18n全局翻译功能===========================================================start
+        const { locale } = useI18n()
+        // 创建一个独立的响应式变量用于 select 绑定
+        const selectedLang = ref(locale.value)
+
+        // 组件挂载时：从 localStorage 恢复语言设置
+        onMounted(() => {
+            const savedLang = localStorage.getItem('user_lang')
+            if (savedLang && (savedLang === 'zh-CN' || savedLang === 'en')) {
+                // 更新 i18n 的 locale
+                locale.value = savedLang
+                // 更新 select 的绑定值
+                selectedLang.value = savedLang
+                console.log('从 localStorage 恢复语言:', savedLang)
+            } else {
+                // 如果没有保存，使用默认值并保存
+                const defaultLang = 'zh-CN'
+                locale.value = defaultLang
+                selectedLang.value = defaultLang
+                localStorage.setItem('user_lang', defaultLang)
+                console.log('使用默认语言:', defaultLang)
+            }
+        })
+
+        //从 selectedLang 获取值而不是 locale
+        const changeLanguage = () => {
+            // 更新 i18n 的 locale
+            locale.value = selectedLang.value
+            // 将当前语言保存到 localStorage
+            localStorage.setItem('user_lang', selectedLang.value)
+            console.log('切换到:', selectedLang.value)
+            // 页面所有使用 $t() 的地方会自动刷新
+        }
+        // i18n翻译功能===========================================================end
+
         const userData = reactive({//数据
             userName: sessionStorage.getItem('manageName'),
             communityName: sessionStorage.getItem('communityName'),
@@ -90,6 +141,8 @@ export default {
 
         return{
             userExit,
+            changeLanguage,
+            selectedLang, // 返回给模板使用
             userData,
             centerDialogVisible
         }

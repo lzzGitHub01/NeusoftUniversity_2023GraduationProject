@@ -1,0 +1,11 @@
+{
+  "header": {
+    "exit": "退出"
+  },
+  "login": {
+    "welcome": "账号密码登陆"
+  },
+  "area": {
+    "area_id": "区域ID"
+  }
+}

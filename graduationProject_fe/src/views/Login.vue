@@ -11,7 +11,7 @@
                             <el-row>
                                 <el-col :span="2"></el-col>
                                 <el-col :span="3"><el-divider></el-divider></el-col>
-                                <el-col :span="7"><div class="textStyle">账号密码登陆</div></el-col>
+                                <el-col :span="7"><div class="textStyle">{{ $t('login.welcome') }}</div></el-col>
                                 <el-col :span="10"><el-divider></el-divider></el-col>
                                 <el-col :span="2"></el-col>
                             </el-row>  

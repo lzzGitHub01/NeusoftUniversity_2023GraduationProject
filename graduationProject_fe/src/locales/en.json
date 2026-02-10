@@ -1,0 +1,12 @@
+{
+  "header": {
+    "exit": "Exit"
+  },
+  "login": {
+    "welcome": "Login with account and password"
+  },
+  "area": {
+    "area_id": "Area ID"
+  }
+}
+
